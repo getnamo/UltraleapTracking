@@ -120,7 +120,7 @@ UBodyStateSkeleton::UBodyStateSkeleton(const FObjectInitializer& ObjectInitializ
 	Bones[(int32)EBodyStateBasicBoneType::BONE_PINKY_1_PROXIMAL_R]->AddChild(Bones[(int32)EBodyStateBasicBoneType::BONE_PINKY_2_INTERMEDIATE_R]);
 	Bones[(int32)EBodyStateBasicBoneType::BONE_PINKY_2_INTERMEDIATE_R]->AddChild(Bones[(int32)EBodyStateBasicBoneType::BONE_PINKY_3_DISTAL_R]);
 
-
+	bTrackingActive = true;
 }
 
 UBodyStateBone* UBodyStateSkeleton::RootBone()
