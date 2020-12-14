@@ -52,8 +52,7 @@ void FLeapImage::UpdateTextureRegions(UTexture2D* Texture, int32 MipIndex, uint3
 	{
 		struct FUpdateTextureRegionsData
 		{
-			FTexture2DResource* Texture2DResource;
-			int32 MipIndex;
+			FTextureResource* TextureResource;
 			uint32 NumRegions;
 			FUpdateTextureRegion2D* Regions;
 			uint32 SrcPitch;
@@ -65,8 +64,7 @@ void FLeapImage::UpdateTextureRegions(UTexture2D* Texture, int32 MipIndex, uint3
 
 		FUpdateTextureRegionsData* RegionData = new FUpdateTextureRegionsData;
 
-		RegionData->Texture2DResource = (FTexture2DResource*)Texture->Resource;
-		RegionData->MipIndex = MipIndex;
+		RegionData->TextureResource = (FTextureResource*)Texture->Resource;
 		RegionData->NumRegions = NumRegions;
 		RegionData->Regions = Regions;
 		RegionData->SrcPitch = SrcPitch;
@@ -80,19 +78,15 @@ void FLeapImage::UpdateTextureRegions(UTexture2D* Texture, int32 MipIndex, uint3
 			{
 				for (uint32 RegionIndex = 0; RegionIndex < RegionData->NumRegions; ++RegionIndex)
 				{
-					int32 CurrentFirstMip = RegionData->Texture2DResource->GetCurrentFirstMip();
-					if (RegionData->MipIndex >= CurrentFirstMip)
-					{
-						RHIUpdateTexture2D(
-							RegionData->Texture2DResource->GetTexture2DRHI(),
-							RegionData->MipIndex - CurrentFirstMip,
-							RegionData->Regions[RegionIndex],
-							RegionData->SrcPitch,
-							RegionData->SrcData
-							+ RegionData->Regions[RegionIndex].SrcY * RegionData->SrcPitch
-							+ RegionData->Regions[RegionIndex].SrcX * RegionData->SrcBpp
-						);
-					}
+					RHIUpdateTexture2D(
+						RegionData->TextureResource->TextureRHI->GetTexture2D(),
+						0,
+						RegionData->Regions[RegionIndex],
+						RegionData->SrcPitch,
+						RegionData->SrcData
+						+ RegionData->Regions[RegionIndex].SrcY * RegionData->SrcPitch
+						+ RegionData->Regions[RegionIndex].SrcX * RegionData->SrcBpp
+					);
 				}
 				if (RegionData->bFreeData)
 				{
