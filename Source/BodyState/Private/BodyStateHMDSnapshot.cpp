@@ -19,6 +19,13 @@ void BSHMDSnapshotHandler::AddCurrentHMDSample(double CustomTimeStamp)
 	}
 }
 
+BodyStateHMDSnapshot::BodyStateHMDSnapshot()
+{
+	Timestamp = 0.0;
+	Position = FVector(0.f);
+	Orientation = FQuat(ForceInit);
+}
+
 BodyStateHMDSnapshot::BodyStateHMDSnapshot(double InTimeStamp, const FVector& InPosition, const FQuat& InOrientation)
 {
 	Timestamp = InTimeStamp;
