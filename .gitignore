@@ -8,9 +8,7 @@
 
 #folders
 Intermediate
-Binaries/Win64/UE4Editor*.modules
-Binaries/Win64/UE4-*.dll
-Binaries/Win64/UE4-*.lib
-Binaries/Win64/UE4Editor*.dll
-Binaries/Win64/UE4Editor*.dll
+Binaries/Win64/UnrealEditor*.modules
+Binaries/Win64/UnrealEditor-*.dll
+Binaries/Win64/UnrealEditor-*.lib
 *.a
