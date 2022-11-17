@@ -131,7 +131,7 @@ TMap<EBodyStateBasicBoneType, FBodyStateIndexedBone> UBodyStateAnimInstance::Aut
 	}
 
 	//Get bones and parent indices
-	USkeletalMesh* SkeletalMesh = Component->SkeletalMesh;
+	USkeletalMesh* SkeletalMesh = Component->GetSkeletalMeshAsset();
 	FReferenceSkeleton& RefSkeleton = SkeletalMesh->GetRefSkeleton();
 
 	//Root bone

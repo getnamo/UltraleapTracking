@@ -652,7 +652,7 @@ void FLeapMotionInputDevice::ClearReferences(UObject* object)
 		if (object->IsValidLowLevel())
 		{
 			object->RemoveFromRoot();
-			object->MarkPendingKill();
+			object->MarkAsGarbage();
 		}
 	}
 }
