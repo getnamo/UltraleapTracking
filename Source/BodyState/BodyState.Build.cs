@@ -39,7 +39,8 @@ public class BodyState : ModuleRules
 				"InputDevice",
 				"HeadMountedDisplay",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"XRBase"
 			}
 			);
 		
