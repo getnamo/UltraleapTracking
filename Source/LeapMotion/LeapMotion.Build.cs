@@ -212,7 +212,7 @@ namespace UnrealBuildTool.Rules
 					//DLL
 					string PluginDLLPath = Path.Combine(BinariesPath, PlatformString, "LeapC.dll");
 
-					System.Console.WriteLine("Project plugin detected, using dll at " + PluginDLLPath);
+					//System.Console.WriteLine("Project plugin detected, using dll at " + PluginDLLPath);
 
 					//For project plugins, copy the dll to the project if needed
 					CopyToProjectBinaries(PluginDLLPath, Target);

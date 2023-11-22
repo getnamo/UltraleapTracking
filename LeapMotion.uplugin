@@ -42,5 +42,11 @@
 				"IOS"
 			]
 		}
+	],
+	"Plugins": [
+		{
+			"Name": "XRBase",
+			"Enabled": true
+		}
 	]
 }
