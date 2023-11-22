@@ -16,9 +16,9 @@ public:
 	static float AngleBetweenVectors(FVector A, FVector B);
 
 	template<typename T>
-	static FString EnumToString(const FString& enumName, const T value)
+	static FString EnumToString(const FString& EnumName, const T Value)
 	{
-		UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, *enumName);
-		return *(pEnum ? pEnum->GetNameStringByIndex(static_cast<uint8>(value)) : "null");
+		UEnum* pEnum = FindFirstObject<UEnum>(*EnumName);
+		return *(pEnum ? pEnum->GetNameStringByIndex(static_cast<uint8>(Value)) : "null");
 	}
 };
