@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "LeapC.h"
@@ -18,6 +18,7 @@ public:
 		const eLeapDeviceStatus FailureCode,
 		const LEAP_DEVICE FailedDevice) {};
 	virtual void OnPolicy(const uint32_t CurrentPolicies) {};
+	virtual void OnTrackingMode(const eLeapTrackingMode current_tracking_mode) {};
 	virtual void OnFrame(const LEAP_TRACKING_EVENT *TrackingEvent) {};
 	virtual void OnImage(const LEAP_IMAGE_EVENT *ImageEvent) {};
 	virtual void OnLog(
@@ -37,10 +38,9 @@ public:
 	FThreadSafeBool bHasFinished;
 	bool bIsConnected;
 	LEAP_CONNECTION ConnectionHandle;
-	LEAP_TRACKING_EVENT *LastFrame = NULL;
 	LEAP_IMAGE_FRAME_DESCRIPTION *ImageDescription = NULL;
 	void* ImageBuffer = NULL;
-	LEAP_DEVICE_INFO *LastDevice = NULL;
+	LEAP_DEVICE_INFO *CurrentDeviceInfo = NULL;
 	
 	FLeapWrapper();
 	~FLeapWrapper();
@@ -58,7 +58,8 @@ public:
 
 	void SetPolicy(int64 Flags, int64 ClearFlags);
 	void SetPolicyFlagFromBoolean(eLeapPolicyFlag Flag, bool ShouldSet);
-
+	// Supercedes SetPolicy for HMD/Desktop/Screentop modes
+	void SetTrackingMode(eLeapTrackingMode TrackingMode);
 	//Polling functions
 
 	/** Get latest frame - critical section locked */
@@ -75,6 +76,10 @@ public:
 private:
 	void CloseConnectionHandle(LEAP_CONNECTION* ConnectionHandle);
 	void Millisleep(int Milliseconds);
+
+	//Frame and handle data
+	LEAP_DEVICE DeviceHandle;
+	LEAP_TRACKING_EVENT* LatestFrame = NULL;
 
 	//Threading variables
 	FCriticalSection DataLock;
@@ -99,7 +104,7 @@ private:
 	FGraphEventRef TaskRefConfigResponse;
 
 	//void setImage();
-	void SetFrame(const LEAP_TRACKING_EVENT *Frame);
+	void SetFrame(const LEAP_TRACKING_EVENT* Frame);
 	void SetDevice(const LEAP_DEVICE_INFO *DeviceProps);
 	void CleanupLastDevice();
 
@@ -115,6 +120,7 @@ private:
 	void HandleImageEvent(const LEAP_IMAGE_EVENT *ImageEvent);
 	void HandleLogEvent(const LEAP_LOG_EVENT *LogEvent);
 	void HandlePolicyEvent(const LEAP_POLICY_EVENT *PolicyEvent);
+	void HandleTrackingModeEvent(const LEAP_TRACKING_MODE_EVENT* TrackingEvent);
 	void HandleConfigChangeEvent(const LEAP_CONFIG_CHANGE_EVENT *ConfigChangeEvent);
 	void HandleConfigResponseEvent(const LEAP_CONFIG_RESPONSE_EVENT *ConfigResponseEvent);
 };

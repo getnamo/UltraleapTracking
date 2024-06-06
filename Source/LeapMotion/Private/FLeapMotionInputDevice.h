@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -69,7 +69,7 @@ public:
 
 	//Policy and toggles
 	void SetLeapPolicy(ELeapPolicyFlag Flag, bool Enable);
-
+	void SetTrackingMode(ELeapMode Flag);
 	//BodyState
 	virtual void UpdateInput(int32 DeviceID, class UBodyStateSkeleton* Skeleton) override;
 	virtual void OnDeviceDetach();
@@ -87,8 +87,36 @@ public:
 	void SetOptions(const FLeapOptions& Options);
 	FLeapOptions GetOptions();
 	FLeapStats GetStats();
-
+	const TArray<FString>& GetAttachedDevices() { return AttachedDevices; }
 private:
+	bool UseTimeBasedVisibilityCheck = false;
+	bool UseTimeBasedGestureCheck = false;
+	//Time Based Variables
+	//Pinch And Grab Thresholds
+	float StartGrabThreshold = .8f;
+	float EndGrabThreshold = .5f;
+	float StartPinchThreshold = .8f;
+	float EndPinchThreshold = .5f;
+	double TimeSinceLastLeftPinch = 0;
+	double TimeSinceLastRightPinch = 0;
+	double TimeSinceLastLeftGrab = 0;
+	double TimeSinceLastRightGrab = 0;
+	double PinchTimeout = 100000; //.1 Second
+	double GrabTimeout = 100000; //.1 Second
+	bool IsLeftPinching = false;
+	bool IsRightPinching = false;
+	bool IsLeftGrabbing = false;
+	bool IsRightGrabbing = false;
+	//Visibility Tracking and Thresholds
+	bool IsLeftVisible = false;
+	bool IsRightVisible = false;
+	int64_t TimeSinceLastLeftVisible = 10000;
+	int64_t TimeSinceLastRightVisible = 10000;
+	int64_t VisibilityTimeout = 1000000; //1 Second
+	int64_t LastLeapTime = 0;
+	FLeapHandData LastLeftHand;
+	FLeapHandData LastRightHand;
+
 	//Private UProperties
 	void ClearReferences(UObject* object);
 
@@ -101,6 +129,9 @@ private:
 	bool EmitAnalogInputEventForKey(FKey Key, float Value, int32 User, bool Repeat);
 	bool HandClosed(float Strength);
 	bool HandPinched(float Strength);
+	void CheckHandVisibility();
+	void CheckPinchGesture();
+	void CheckGrabGesture();
 
 	int64 GetInterpolatedNow();
 
@@ -130,7 +161,7 @@ private:
 	FLeapFrameData PastFrame;
 	
 	TArray<FString> AttachedDevices;
-	TArray<int32> VisibleHands;
+	
 	TArray<int32> PastVisibleHands;
 
 	//Time warp support
@@ -143,6 +174,9 @@ private:
 	//SVE
 	bool bSceneViewExtensionSet;
 
+
+	// v5 Tracking mode API
+	static bool bUseNewTrackingModeAPI;
 	//Wrapper link
 	FLeapWrapper Leap;
 
@@ -157,6 +191,7 @@ private:
 	virtual void OnFrame(const LEAP_TRACKING_EVENT *frame) override;
 	virtual void OnImage(const LEAP_IMAGE_EVENT *image_event) override;
 	virtual void OnPolicy(const uint32_t current_policies) override;
+	virtual void OnTrackingMode(const eLeapTrackingMode current_tracking_mode) override;
 	virtual void OnLog(
 		const eLeapLogSeverity severity,
 		const int64_t timestamp,
@@ -166,8 +201,10 @@ private:
 	int32 BodyStateDeviceId;
 	FBodyStateDeviceConfig Config;
 
+#if WITH_EDITOR
 	//LiveLink
 	TSharedPtr<FLeapLiveLinkProducer> LiveLink;
+#endif
 
 	//Convenience Converters - Todo: wrap into separate class?
 	void SetBSFingerFromLeapDigit(class UBodyStateFinger* Finger, const FLeapDigitData& LeapDigit);

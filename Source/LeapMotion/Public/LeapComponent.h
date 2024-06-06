@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeapFrameSignature, const FLeapFram
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeapHandSignature, const FLeapHandData&, Hand);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeapPolicySignature, TArray<TEnumAsByte<ELeapPolicyFlag>>, Flags);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLeapImageEventSignature, UTexture2D*, Texture, ELeapImageType, ImageType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeapTrackingModeSignature, ELeapMode, Flag);
 
 UCLASS(ClassGroup = "Input Controller", meta = (BlueprintSpawnableComponent))
 
@@ -84,6 +85,21 @@ public:
 	/** Tracking mode optimization */
 	UPROPERTY(BlueprintReadOnly, Category = "Leap Properties")
 	TEnumAsByte<ELeapMode> TrackingMode;
+
+
+	/** Event called when leap policies have changed */
+	UPROPERTY(BlueprintAssignable, Category = "Leap Events")
+	FLeapTrackingModeSignature OnLeapTrackingModeUpdated;
+
+	//By default in vr mode the first/primary device has this set to true
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Leap Properties")
+	bool bAddHmdOrigin;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Leap Properties")
+	int32 DeviceId;
+
+	UFUNCTION(BlueprintCallable, Category = "Leap Functions")
+	void SetShouldAddHmdOrigin(bool& bShouldAdd);
 
 	/** Utility function to check if a hand is visible and tracked at this moment */
 	UFUNCTION(BlueprintCallable, Category = "Leap Functions")

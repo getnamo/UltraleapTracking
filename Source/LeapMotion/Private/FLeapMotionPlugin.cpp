@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #include "FLeapMotionPlugin.h"
 #include "FLeapMotionInputDevice.h"
@@ -125,7 +125,14 @@ void FLeapMotionPlugin::SetLeapPolicy(ELeapPolicyFlag Flag, bool Enable)
 		LeapInputDevice->SetLeapPolicy(Flag, Enable);
 	}
 }
+void FLeapMotionPlugin::GetAttachedDevices(TArray<FString>& Devices)
+{
+	if (bActive)
+	{
+		Devices = LeapInputDevice->GetAttachedDevices();
+	}
 
+}
 void FLeapMotionPlugin::ShutdownLeap()
 {
 	if (bActive)
@@ -140,19 +147,23 @@ void* FLeapMotionPlugin::GetLeapHandle()
 	void* NewLeapDLLHandle = nullptr;
 
 #if PLATFORM_WINDOWS
-#if PLATFORM_64BITS
-	FString BinariesPath = FPaths::EngineDir() / FString(TEXT("Binaries/ThirdParty/LeapMotion/Win64"));
-#else
-	FString BinariesPath = FPaths::EngineDir() / FString(TEXT("Binaries/ThirdParty/LeapMotion/Win32"));
-#endif
-	FPlatformProcess::PushDllDirectory(*BinariesPath);
-	NewLeapDLLHandle = FPlatformProcess::GetDllHandle(*(BinariesPath / "LeapC.dll"));
-	FPlatformProcess::PopDllDirectory(*BinariesPath);
-#endif
+	TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(FString("LeapMotion"));
+	// Load LeapC DLL
+	FString LeapCLibraryPath;
+
+	if (Plugin != nullptr)
+	{
+		FString BaseDir = Plugin->GetBaseDir();
+		LeapCLibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/Win64/LeapC.dll"));
+
+		NewLeapDLLHandle = !LeapCLibraryPath.IsEmpty() ? FPlatformProcess::GetDllHandle(*LeapCLibraryPath) : nullptr;
+
+	}
+#endif //PLATFORM_WINDOWS
 
 	if (NewLeapDLLHandle != nullptr)
 	{
-		UE_LOG(LeapMotionLog, Log, TEXT("Engine plugin DLL found at %s"), *FPaths::ConvertRelativePathToFull(BinariesPath / "LeapC.dll"));
+		UE_LOG(LeapMotionLog, Log, TEXT("Engine plugin DLL found at %s"), *FPaths::ConvertRelativePathToFull(LeapCLibraryPath));
 	}
 	return NewLeapDLLHandle;
 }

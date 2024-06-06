@@ -1,12 +1,12 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "3.7.5",
+	"VersionName": "3.9",
 	"FriendlyName": "Leap Motion Plugin",
 	"Description": "Support for the Leap Motion input device.",
 	"Category": "Input Devices",
-	"CreatedBy": "Getnamo",
-	"CreatedByURL": "https://www.leapmotion.com/",
+	"CreatedBy": "Ultraleap",
+	"CreatedByURL": "https://www.ultraleap.com/",
 	"DocsURL": "https://github.com/leapmotion/leapunreal",
 	"MarketplaceURL": "",
 	"SupportURL": "",
@@ -25,7 +25,7 @@
 		},
 		{
 			"Name": "LeapMotionEditor",
-			"Type": "Editor",
+			"Type": "UncookedOnly",
 			"LoadingPhase": "PreDefault",
 			"WhitelistPlatforms": [
 				"Win64"
@@ -36,10 +36,7 @@
 			"Type": "Runtime",
 			"LoadingPhase": "PreDefault",
 			"WhitelistPlatforms": [
-				"Win64",
-				"Android",
-				"Mac",
-				"IOS"
+				"Win64"
 			]
 		}
 	],

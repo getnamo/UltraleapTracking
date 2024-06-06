@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -24,7 +24,8 @@ public:
 	virtual void AreHandsVisible(bool& LeftHandIsVisible, bool& RightHandIsVisible) override;
 	virtual void GetLatestFrameData(FLeapFrameData& OutData) override;
 	virtual void SetLeapPolicy(ELeapPolicyFlag Flag, bool Enable) override;
-
+	virtual void GetAttachedDevices(TArray<FString>& Devices) override;
+	
 	virtual void ShutdownLeap() override;
 
 	bool IsActive();

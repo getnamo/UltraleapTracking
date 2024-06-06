@@ -1,9 +1,10 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "LeapBlueprintFunctionLibrary.h"
 #include "ILeapMotionPlugin.h"
+
 
 ULeapBlueprintFunctionLibrary::ULeapBlueprintFunctionLibrary(const class FObjectInitializer& Initializer)
 	: Super(Initializer)
@@ -39,6 +40,10 @@ void ULeapBlueprintFunctionLibrary::GetLeapStats(FLeapStats& OutStats)
 void ULeapBlueprintFunctionLibrary::SetLeapPolicy(ELeapPolicyFlag Flag, bool Enable)
 {
 	ILeapMotionPlugin::Get().SetLeapPolicy(Flag, Enable);
+}
+void ULeapBlueprintFunctionLibrary::GetAttachedLeapDevices(TArray<FString>& Devices)
+{
+	ILeapMotionPlugin::Get().GetAttachedDevices(Devices);
 }
 
 //Debug Functions

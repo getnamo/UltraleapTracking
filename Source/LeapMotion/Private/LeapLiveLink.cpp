@@ -1,14 +1,13 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #include "LeapLiveLink.h"
 #include "CoreMinimal.h"
 #include "Misc/App.h"
 #include "Animation/AnimInstance.h"
-
-
 #include "LiveLinkProvider.h"
 #include "Roles/LiveLinkAnimationRole.h"
 #include "Roles/LiveLinkAnimationTypes.h"
+#include "LeapBlueprintFunctionLibrary.h"
 
 FLeapLiveLinkProducer::FLeapLiveLinkProducer()
 {
@@ -44,33 +43,29 @@ void FLeapLiveLinkProducer::SyncSubjectToSkeleton(const UBodyStateSkeleton* Skel
 {
 	const TArray<UBodyStateBone*>& Bones = Skeleton->Bones;
 
-	LiveLinkProvider->RemoveSubject(SubjectName);
-
-	//Initialize the subject
+	//Create Data structures for LiveLink
 	FLiveLinkStaticDataStruct StaticData(FLiveLinkSkeletonStaticData::StaticStruct());
-	FLiveLinkSkeletonStaticData* AnimationStaticData = StaticData.Cast<FLiveLinkSkeletonStaticData>();
+	FLiveLinkSkeletonStaticData& AnimationData = *StaticData.Cast<FLiveLinkSkeletonStaticData>();
 
 	TrackedBones.Reset();
 
 	TArray<FName> ParentsNames;
-	ParentsNames.Reserve(Bones.Num());
-
-	for (UBodyStateBone* Bone : Bones)
+	for(int i = 0; i < Bones.Num(); i++)
 	{
-		if (Bone->IsTracked())
+		if (Bones[i]->IsTracked())
 		{
-			AnimationStaticData->BoneNames.Add(FName(*Bone->Name));
-			ParentsNames.Add(FName(*Bone->Parent->Name));
-			TrackedBones.Add(Bone);
+			AnimationData.BoneNames.Add(FName(*Bones[i]->Name));
+			ParentsNames.Add(FName(*Bones[i]->Parent->Name));
+			TrackedBones.Add(Bones[i]);
 		}
 	}
 
-	//Correct the parent index to the current live list
-	for (FName ParentName : ParentsNames)
+	//Add bone parents
+	for (int j = 0; j < ParentsNames.Num(); j++) 
 	{
-		AnimationStaticData->BoneParents.Add(AnimationStaticData->BoneNames.IndexOfByKey(ParentName));
+		AnimationData.BoneParents.Add(AnimationData.BoneNames.IndexOfByKey(ParentsNames[j]));
 	}
-
+	
 	LiveLinkProvider->UpdateSubjectStaticData(SubjectName, ULiveLinkAnimationRole::StaticClass(), MoveTemp(StaticData));
 }
 
@@ -79,17 +74,20 @@ void FLeapLiveLinkProducer::UpdateFromBodyState(const UBodyStateSkeleton* Skelet
 	FLiveLinkFrameDataStruct FrameData(FLiveLinkAnimationFrameData::StaticStruct());
 	FLiveLinkAnimationFrameData* AnimationFrameData = FrameData.Cast<FLiveLinkAnimationFrameData>();
 
-	AnimationFrameData->Transforms.Reserve(TrackedBones.Num());
+	const TArray<UBodyStateBone*>& Bones = Skeleton->Bones;
 
-	for (TWeakObjectPtr<UBodyStateBone> WeakBone : TrackedBones)
+
+	for (int i = 0; i < Bones.Num(); i++)
 	{
-		if (UBodyStateBone* Bone = WeakBone.Get())
+		if (Bones[i]->IsTracked())
 		{
-			AnimationFrameData->Transforms.Add(Bone->Transform());
-		}
-		else
-		{
-			AnimationFrameData->Transforms.Add(FTransform::Identity);
+			FTransform BoneTransform = Bones[i]->Transform();
+			FTransform ParentTransform;
+
+			// The live link node outputs in local space (this means each bone transform must be relative to its parent)
+			// so convert from component space here
+			ConvertComponentTransformToLocalTransform(BoneTransform, Bones[i]->Parent->Transform());
+			AnimationFrameData->Transforms.Add(BoneTransform);
 		}
 	}
 
@@ -99,4 +97,9 @@ void FLeapLiveLinkProducer::UpdateFromBodyState(const UBodyStateSkeleton* Skelet
 bool FLeapLiveLinkProducer::HasConnection()
 {
 	return LiveLinkProvider->HasConnection();
+}
+void FLeapLiveLinkProducer::ConvertComponentTransformToLocalTransform(FTransform& BoneTransform,const FTransform& ParentTransform)
+{
+	BoneTransform.SetToRelativeTransform(ParentTransform);
+	BoneTransform.NormalizeRotation();
 }

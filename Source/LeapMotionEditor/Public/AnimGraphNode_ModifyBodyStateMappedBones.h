@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+	// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "AnimGraphDefinitions.h"
@@ -6,7 +6,7 @@
 #include "AnimGraphNode_SkeletalControlBase.h"
 
 #include "AnimNode_ModifyBodyStateMappedBones.h"
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #include "AnimGraphNode_ModifyBodyStateMappedBones.generated.h"
 
@@ -23,6 +23,7 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual FLinearColor GetNodeTitleColor() const override;
 	virtual FString GetNodeCategory() const override;
+	virtual FText GetTooltipText() const override;
 	// End of UEdGraphNode interface
 
 protected:

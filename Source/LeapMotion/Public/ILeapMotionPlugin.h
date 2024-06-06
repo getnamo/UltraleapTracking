@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -61,6 +61,9 @@ public:
 
 	/** Set a Leap Policy, such as image streaming or optimization type*/
 	virtual void SetLeapPolicy(ELeapPolicyFlag Flag, bool Enable) = 0;
+
+	/** List the attached (plugged in) devices */
+	virtual void GetAttachedDevices(TArray<FString>& Devices) = 0;
 
 	/** Force shutdown leap, do not call unless you have a very specfic need*/
 	virtual void ShutdownLeap() = 0;

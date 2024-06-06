@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -7,7 +7,6 @@ public class BodyState : ModuleRules
 	public BodyState(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-
 		PublicIncludePaths.AddRange(
 			new string[] {
 			}
@@ -43,9 +42,14 @@ public class BodyState : ModuleRules
 				"XRBase"
 			}
 			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
+			if (Target.bBuildEditor)
+			{
+				PrivateDependencyModuleNames.Add("Persona");
+			}
+
+
+
+			DynamicallyLoadedModuleNames.AddRange(
 			new string[]
 			{
 			}

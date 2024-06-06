@@ -1,9 +1,13 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "LeapC.h"
+#include "Runtime/Launch/Resources/Version.h"
 #include "Engine/Texture2D.h"
+#if ENGINE_MAJOR_VERSION >=4 && ENGINE_MINOR_VERSION >= 26
+#include "Engine/Public/Rendering/Texture2DResource.h"
+#endif
 #include "RHI.h"
 #include "HAL/ThreadSafeBool.h"
 #include "LeapMotionData.h"
