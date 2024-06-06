@@ -311,7 +311,7 @@ void FLeapWrapper::HandleDeviceEvent(const LEAP_DEVICE_EVENT* DeviceEvent)
 	eLeapRS Result = LeapOpenDevice(DeviceEvent->device, &DeviceHandle);
 	if (Result != eLeapRS_Success)
 	{
-		UE_LOG(LeapMotionLog, Warning, TEXT("Could not open device %s.\n"), ResultString(Result));
+		UE_LOG(LeapMotionLog, Warning, TEXT("Could not open device %s.\n"), (TCHAR*)ResultString(Result));
 		return;
 	}
 

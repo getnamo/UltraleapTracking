@@ -4,6 +4,7 @@
 #include "Modules/ModuleManager.h"
 #include "BodystateAnimInstance.h"
 #include "FUltraleapAnimCustomDetailsPanel.h"
+#include "AnimGraphNode_ModifyBodyStateMappedBones.h"
 #include "Modules/ModuleManager.h"
 #include "PropertyEditorModule.h"
 

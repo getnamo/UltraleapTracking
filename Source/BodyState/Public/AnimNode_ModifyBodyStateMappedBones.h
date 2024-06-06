@@ -5,7 +5,7 @@
 #include "BodyStateAnimInstance.h"
 #include "CoreMinimal.h"
 #if ENGINE_MAJOR_VERSION >= 5
-#include "AnimNode_SkeletalControlBase.h"
+#include "BoneControllers/AnimNode_SkeletalControlBase.h"
 #else
 #include "Runtime/AnimGraphRuntime/Public/BoneControllers/AnimNode_SkeletalControlBase.h"
 #endif

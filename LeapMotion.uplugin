@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "3.9.g",
+	"VersionName": "3.9.1.g",
 	"FriendlyName": "Leap Motion Plugin",
-	"Description": "Support for the Leap Motion input device.",
+	"Description": "Support for the Leap Motion input device. Getnamo fork",
 	"Category": "Input Devices",
 	"CreatedBy": "Ultraleap",
 	"CreatedByURL": "https://www.ultraleap.com/",
