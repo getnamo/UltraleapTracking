@@ -175,8 +175,8 @@ TMap<EBodyStateBasicBoneType, FBodyStateIndexedBone> UBodyStateAnimInstance::Aut
 	}
 
 	// Get bones and parent indices
-	USkeletalMesh* SkeletalMesh = Component->SkeletalMesh;
-	FReferenceSkeleton& RefSkeleton = SkeletalMesh->RefSkeleton;
+	USkeletalMesh* SkeletalMesh = Component->GetSkeletalMeshAsset();
+	FReferenceSkeleton& RefSkeleton = SkeletalMesh->GetRefSkeleton();
 
 	// Finger roots
 	int32 ThumbBone = InvalidBone;
@@ -545,7 +545,7 @@ FTransform UBodyStateAnimInstance::GetCurrentWristPose(
 	FTransform Ret;
 	USkeletalMeshComponent* Component = GetSkelMeshComponent();
 	// Get bones and parent indices
-	USkeletalMesh* SkeletalMesh = Component->SkeletalMesh;
+	USkeletalMesh* SkeletalMesh = Component->GetSkeletalMeshAsset();
 
 	TArray<FName> Names;
 	TArray<FNodeItem> NodeItems;
@@ -596,7 +596,7 @@ void UBodyStateAnimInstance::EstimateAutoMapRotation(FMappedBoneAnimData& ForMap
 	USkeletalMeshComponent* Component = GetSkelMeshComponent();
 	const TArray<FTransform>& ComponentSpaceTransforms = Component->GetComponentSpaceTransforms();
 	// Get bones and parent indices
-	USkeletalMesh* SkeletalMesh = Component->SkeletalMesh;
+	USkeletalMesh* SkeletalMesh = Component->GetSkeletalMeshAsset();
 	TArray<FName> Names;
 	TArray<FNodeItem> NodeItems;
 	INodeMappingProviderInterface* INodeMapping = Cast<INodeMappingProviderInterface>(SkeletalMesh);
@@ -708,7 +708,7 @@ float UBodyStateAnimInstance::CalculateElbowLength(const FMappedBoneAnimData& Fo
 	float ElbowLength = 0;
 	USkeletalMeshComponent* Component = GetSkelMeshComponent();
 	// Get bones and parent indices
-	USkeletalMesh* SkeletalMesh = Component->SkeletalMesh;
+	USkeletalMesh* SkeletalMesh = Component->GetSkeletalMeshAsset();
 	TArray<FName> Names;
 	TArray<FNodeItem> NodeItems;
 	INodeMappingProviderInterface* INodeMapping = Cast<INodeMappingProviderInterface>(SkeletalMesh);
