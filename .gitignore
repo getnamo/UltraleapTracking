@@ -5,6 +5,7 @@
 *.obj
 *.pdb
 *.DS_Store
+*.exp
 
 #folders
 Intermediate
