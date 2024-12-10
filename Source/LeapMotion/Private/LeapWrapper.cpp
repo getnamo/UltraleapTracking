@@ -101,11 +101,11 @@ void FLeapWrapper::CloseConnection()
 }
 void FLeapWrapper::SetTrackingMode(eLeapTrackingMode TrackingMode)
 {
-	eLeapRS Result = LeapSetTrackingMode(ConnectionHandle, TrackingMode);
+	/*eLeapRS Result = LeapSetTrackingMode(ConnectionHandle, TrackingMode);
 	if (Result != eLeapRS_Success)
 	{
 		UE_LOG(LeapMotionLog, Log, TEXT("SetTrackingMode failed in  FLeapWrapper::SetTrackingMode."));
-	}
+	}*/
 }
 void FLeapWrapper::SetPolicy(int64 Flags, int64 ClearFlags)
 {
