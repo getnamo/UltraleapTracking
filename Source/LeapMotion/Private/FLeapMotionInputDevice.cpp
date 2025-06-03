@@ -1194,7 +1194,7 @@ void FLeapMotionInputDevice::BeginRenderViewFamily(FSceneViewFamily& InViewFamil
 {
 }
 
-void FLeapMotionInputDevice::PreRenderViewFamily_RenderThread(FRHICommandListImmediate& RHICmdList, FSceneViewFamily& InViewFamily)
+void FLeapMotionInputDevice::PreRenderViewFamily_RenderThread(FRDGBuilder& GraphBuilder, FSceneViewFamily& InViewFamily)
 {
 	//SnapshotHandler.AddCurrentHMDSample(LeapGetNow());
 	CurrentFrame.SetFromLeapFrame(Leap.GetFrame());
